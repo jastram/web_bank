@@ -139,9 +139,11 @@ class NewParser:
 		#CSV abrufen
 		request=urllib2.Request(url+'?$part=DkbTransactionBanking.content.creditcard.CreditcardTransactionSearch&$event=csvExport',
 		                        headers={'Referer':urllib.quote_plus(url)})
-		antwort= urllib2.urlopen(request).read()
+		req = urllib2.urlopen(request)
+		antwort= req.read()
 		log('Daten empfangen. Länge: %s'%len(antwort))
-		return antwort
+		encoding = req.headers['content-type'].split('charset=')[-1]
+		return unicode(antwort, encoding)
 	   
 	def parse_csv(self, cc_csv):
 		result=[]
